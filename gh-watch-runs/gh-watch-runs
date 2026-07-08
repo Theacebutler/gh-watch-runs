@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+if ! command -v gh &>/dev/null; then
+  echo "Error: 'gh' CLI is not installed or not in PATH" >&2
+  exit 1
+fi
+
+run_count=$(gh run list --json databaseId --limit 1 --jq 'length' 2>/dev/null)
+if [[ -z "$run_count" || "$run_count" -eq 0 ]]; then
+  echo "No workflow runs found in the current repository." >&2
+  exit 0
+fi
+# NOTE:
+# FLAGS:
+# with-nth controls what is shown
+
+# Available json fields:
+# attempt, conclusion, createdAt, databaseId, displayTitle, event, headBranch, headSha, name, number, startedAt, status, updatedAt, url, workflowDatabaseId, workflowName
+data=$(gh run list --json attempt,conclusion,createdAt,databaseId,displayTitle,event,headBranch,headSha,name,number,startedAt,status,updatedAt,url,workflowDatabaseId,workflowName  --limit 50)
+
+id=$(echo "$data"| jq -r '.[] | [ .databaseId, .displayTitle, .headBranch, .attempt, .status, .conclusion, .event, .createdAt, .url, .databaseId, .displayTitle,   .headSha,  .number, .startedAt,  .updatedAt,   .workflowName] | @tsv' \
+| fzf-tmux -p 80%,70% --with-nth=2 --delimiter=$'\t'  \
+--preview 'echo -e Title: {2} \
+"\n"Branch: {3} \
+"\n"Attempt: {4}\
+"\n"Status: {5}\
+"\n"Conclusion: {6}\
+"\n"EVent: {7}\
+"\n"Created at: "$(date --date {8})"  \
+"\n"URL: {9} \
+"\n"ID: {1} '\
+ --border-label '  GitHub Actions   ' \
+  --preview-window 'right:55%' \
+| cut --fields=1)
+
+if [ -z "$id" ]; then
+  exit 0
+fi
+# if this is a tmux session, open a popup
+# if [ -n "$TMUX" ]; then
+#   tmux display-popup -d '#{pane_current_path}'  -w 80% -h 70%  'gh run watch "$id"'
+#   gh run watch "$id"
+# else
+#   gh run watch "$id"
+# fi
+gh run watch "$id"
