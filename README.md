@@ -6,23 +6,20 @@ Combines `gh`, `jq`, and `fzf-tmux` for a searchable list of recent runs in a tm
 
 ## Prerequisites
 
-- [gh](https://cli.github.com/) — GitHub CLI (authenticated via `gh auth login`)
 - [jq](https://jqlang.github.io/jq/) — JSON processor
 - [fzf](https://github.com/junegunn/fzf) — fuzzy finder (provides `fzf-tmux`)
-- [tmux](https://github.com/tmux/tmux) — terminal multiplexer
+- [tmux](https://github.com/tmux/tmux) — terminal multiplexer (optional)
 
 ## Installation
 
 ```bash
-git clone https://github.com/<user>/gh-watch-runs.git
-# optionally add to PATH
-ln -s "$PWD/gh-watch-runs/gh-watch-runs" ~/.local/bin/
+ gh extension install theacebutler/gh-watch-runs
 ```
 
 ## Usage
 
 ```bash
-gh-watch-runs
+gh watch-runs
 ```
 
 Run from inside any git repository connected to GitHub. No arguments needed.
