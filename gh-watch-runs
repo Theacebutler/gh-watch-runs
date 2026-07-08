@@ -27,7 +27,7 @@ id=$(echo "$data"| jq -r '.[] | [ .databaseId, .displayTitle, .headBranch, .atte
 "\n"Attempt: {4}\
 "\n"Status: {5}\
 "\n"Conclusion: {6}\
-"\n"EVent: {7}\
+"\n"Event: {7}\
 "\n"Created at: "$(date --date {8})"  \
 "\n"URL: {9} \
 "\n"ID: {1} '\
