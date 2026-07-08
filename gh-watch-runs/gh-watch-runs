@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if ! command -v gh &>/dev/null; then
   echo "Error: 'gh' CLI is not installed or not in PATH" >&2
   exit 1
